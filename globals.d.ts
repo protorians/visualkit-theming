@@ -1,6 +1,6 @@
 declare module '@visualkit/theming/facades' {
   import { Coloring, MetaConfig, MetaElement, Theming, ThemingSlot } from "@visualkit/theming/index";
-  import type { IColors, IThemingBlueprintRaw, IThemingOptions } from "@visualkit/theming/types";
+  import type { IColors, IRuntimeConfig, IThemingBlueprintRaw, IThemingOptions, IThemingRuntime } from "@visualkit/theming/types";
   export function coloring(): Coloring;
   export function metae(): MetaElement;
   export function metaConfig(): MetaConfig;
@@ -9,6 +9,7 @@ declare module '@visualkit/theming/facades' {
   export function makeTheming<Schema extends IThemingBlueprintRaw>(properties: Partial<Schema>, options?: IThemingOptions): Theming;
   export function assign<I>(instance: I, associate: any): I;
   export function variant<T extends string>(name: T, color: string, intensityRatio?: number, opacityRatio?: number): IColors<T>;
+  export function runtime(config?: IRuntimeConfig): IThemingRuntime;
 
 }
 declare module '@visualkit/theming/index' {
@@ -23,7 +24,13 @@ declare module '@visualkit/theming/index' {
 
 }
 declare module '@visualkit/theming/supports' {
-  import { type ITheming, type IThemingSlot, type IThemingSlotOptions, IThemingSlotPayload, IThemingType, IThemingSeries, IThemingSlotOption, IThemingOptions, IColorRGB } from "@visualkit/theming/types";
+  import { type ITheming, type IThemingSlot, type IThemingSlotOptions, IThemingSlotPayload, IThemingType, IThemingSeries, IThemingSlotOption, IThemingOptions, IColorRGB, IThemingRuntime } from "@visualkit/theming/types";
+  export class Themings {
+      static entries: IThemingRuntime[];
+      static palette(name: string): ITheming;
+      static tone(name: string): ITheming;
+      static category(name: string): ITheming;
+  }
   export class Coloring {
       static rgba(hex: string, alpha?: number): string;
       static hex({ red, green, blue }: IColorRGB): string;
@@ -135,6 +142,17 @@ declare module '@visualkit/theming/types' {
       removeSlotByName(name: string): this;
       render(): string[];
   }
+  export type IThemingRuntime = {
+      palettes: ITheming;
+      tones: ITheming;
+      properties: ITheming;
+      slots: (IThemingSlot | undefined)[];
+  };
+  export type IRuntimeConfig = {
+      palette?: string;
+      tone?: string;
+      category?: string;
+  };
 
 }
 declare module '@visualkit/theming' {

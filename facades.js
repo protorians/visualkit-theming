@@ -1,4 +1,4 @@
-import { Coloring, MetaConfig, MetaElement, Theming, ThemingSlot } from "./index";
+import { Coloring, MetaConfig, MetaElement, ThemeSeries, ThemeTypes, Theming, ThemingSlot, Themings } from "./index";
 export function coloring() {
     return new Coloring;
 }
@@ -80,4 +80,45 @@ export function variant(name, color, intensityRatio, opacityRatio) {
         payload[`${name}-heavy-alpha-${x}-heavy`] = `${Coloring.rgba(Coloring.darken(gdarken), x / opacityRatio)}`;
     }
     return payload;
+}
+export function runtime(config) {
+    config = config || {};
+    const palettes = theming({ identifier: config.palette || undefined });
+    const tones = theming({ identifier: config.tone || undefined });
+    const properties = theming({ identifier: config.category || undefined });
+    const slots = Array.from(document.querySelectorAll(MetaConfig.selectorID)).map(meta => {
+        const name = meta.getAttribute('property') || undefined;
+        const value = meta.getAttribute('content') || undefined;
+        const intensityRatio = parseInt(`${meta.getAttribute('theme:intensity-ratio')}`) || undefined;
+        const opacityRatio = parseInt(`${meta.getAttribute('theme:opacity-ratio')}`) || undefined;
+        const type = (meta.getAttribute('theme:type') || ThemeTypes.Data);
+        const series = (meta.getAttribute('theme:series') || ThemeSeries.Property);
+        if (name && value) {
+            const paletteName = (meta.getAttribute('theme:palette') || undefined);
+            const toneName = (meta.getAttribute('theme:tone') || undefined);
+            const categoryName = (meta.getAttribute('theme:category') || undefined);
+            const slot = themingSlot()
+                .name(name)
+                .type(type)
+                .series(series)
+                .value(value)
+                .option('intensityRatio', intensityRatio)
+                .option('opacityRatio', opacityRatio);
+            if (series == ThemeSeries.Palette) {
+                (paletteName ? Themings.palette(paletteName) || palettes : palettes).slot(slot);
+            }
+            if (series == ThemeSeries.Tone) {
+                (toneName ? Themings.tone(toneName) || tones : tones).slot(slot);
+            }
+            if (series == ThemeSeries.Property) {
+                (categoryName ? Themings.category(categoryName) || properties : properties).slot(slot);
+            }
+            return slot;
+        }
+        return undefined;
+    });
+    palettes.render();
+    tones.render();
+    properties.render();
+    return { palettes, tones, properties, slots, };
 }

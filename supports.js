@@ -12,6 +12,18 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
 var _ThemingSlot_options, _ThemingSlot_payload, _Theming_slots;
 import { assign, variant } from "./facades";
 import { ThemeTypes, ThemeSeries } from "./types";
+export class Themings {
+    static palette(name) {
+        return ([...this.entries.filter(entry => entry.palettes.identifier == name)][0] || undefined)?.palettes || undefined;
+    }
+    static tone(name) {
+        return ([...this.entries.filter(entry => entry.tones.identifier == name)][0] || undefined)?.tones || undefined;
+    }
+    static category(name) {
+        return ([...this.entries.filter(entry => entry.properties.identifier == name)][0] || undefined)?.properties || undefined;
+    }
+}
+Themings.entries = [];
 export class Coloring {
     static rgba(hex, alpha = 1) {
         let h = hex.replace('#', '');
