@@ -141,3 +141,31 @@ export interface ITheming {
   render(): string[];
 
 }
+
+
+
+
+export type IThemingRuntime = {
+
+  palettes: ITheming;
+
+  tones: ITheming;
+
+  properties: ITheming;
+
+  slots: (IThemingSlot | undefined)[];
+
+}
+
+
+
+
+export type IRuntimeConfig = {
+
+  palette?: string; 
+  
+  tone?: string; 
+  
+  category?: string;
+  
+}

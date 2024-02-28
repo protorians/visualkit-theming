@@ -10,8 +10,37 @@ import {
   IThemingSeries,
   IThemingSlotOption,
   IThemingOptions,
-  IColorRGB
+  IColorRGB,
+  IThemingRuntime
 } from "./types";
+
+
+
+
+export class Themings {
+
+  static entries: IThemingRuntime[] = [];
+
+  static palette(name: string) {
+
+    return ([...this.entries.filter(entry => entry.palettes.identifier == name)][0] || undefined)?.palettes || undefined
+
+  }
+
+  static tone(name: string) {
+
+    return ([...this.entries.filter(entry => entry.tones.identifier == name)][0] || undefined)?.tones || undefined
+
+  }
+
+  static category(name: string) {
+
+    return ([...this.entries.filter(entry => entry.properties.identifier == name)][0] || undefined)?.properties || undefined
+
+  }
+
+}
+
 
 
 
