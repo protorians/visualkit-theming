@@ -20,7 +20,6 @@ import type {
 } from "./types";
 
 
-
 export function coloring() {
 
   return new Coloring
@@ -57,26 +56,29 @@ export function themingSlot() {
 
 
 export function makeTheming<Schema extends IThemingBlueprintRaw>(
-
   properties: Partial<Schema>,
-
   options?: IThemingOptions
-
 ) {
 
   options = options || {} as IThemingOptions;
 
   const theme = theming(options);
 
-  Object.entries(properties).forEach(({ 0: key, 1: prop }) => {
+  Object.entries(properties).forEach(({0: key, 1: prop}) => {
 
     const slot = themingSlot().name(key)
 
-    if (typeof prop[0] == 'string') { slot.value(prop[0]) }
+    if (typeof prop[0] == 'string') {
+      slot.value(prop[0])
+    }
 
-    if (typeof prop[1] == 'string') { slot.type(prop[1] as IThemingType) }
+    if (typeof prop[1] == 'string') {
+      slot.type(prop[1] as IThemingType)
+    }
 
-    if (typeof prop[2] == 'string') { slot.series(prop[2] as IThemingSeries) }
+    if (typeof prop[2] == 'string') {
+      slot.series(prop[2] as IThemingSeries)
+    }
 
     theme.slot(slot)
 
@@ -93,25 +95,20 @@ export function assign<I>(instance: I, associate: any) {
 
     if (typeof associate == 'object') {
 
-      Object.entries(associate as object).forEach(({ 0: key, 1: value }) =>
+      Object.entries(associate as object).forEach(({0: key, 1: value}) =>
 
         instance[key as keyof I] = value
-
       )
 
-    }
-
-    else {
+    } else {
 
       instance.push(associate);
 
     }
 
-  }
+  } else if (typeof instance == 'object' && typeof associate == 'object') {
 
-  else if (typeof instance == 'object' && typeof associate == 'object') {
-
-    Object.entries(associate as object).forEach(({ 0: key, 1: value }) => {
+    Object.entries(associate as object).forEach(({0: key, 1: value}) => {
 
       if (instance) instance[key as keyof I] = value
 
@@ -150,11 +147,17 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
    */
   for (let x = 0; x <= 9; x++) {
 
-    payload[`${name}-alpha-${x}` as IColorKeys<T>] = `${Coloring.rgba(color, x / opacityRatio)}`;
+    const alpha = x / opacityRatio;
 
-    payload[`${name}-alpha-${x}-lite` as IColorKeys<T>] = `${Coloring.rgba(lighten, x / opacityRatio)}`;
+    if (!isNaN(alpha)) {
 
-    payload[`${name}-alpha-${x}-heavy` as IColorKeys<T>] = `${Coloring.rgba(darken, x / opacityRatio)}`;
+      payload[`${name}-alpha-${x}` as IColorKeys<T>] = `${Coloring.rgba(color, alpha)}`;
+
+      payload[`${name}-alpha-${x}-lite` as IColorKeys<T>] = `${Coloring.rgba(lighten, alpha)}`;
+
+      payload[`${name}-alpha-${x}-heavy` as IColorKeys<T>] = `${Coloring.rgba(darken, alpha)}`;
+
+    }
 
   }
 
@@ -164,23 +167,29 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
    */
   for (let x = 0; x <= 9; x++) {
 
-    const glighten = Coloring.lighten(lighten);
+    const alpha = x / opacityRatio;
 
-    const gdarken = Coloring.darken(lighten);
+    if (!isNaN(alpha)) {
 
+      const glighten = Coloring.lighten(lighten);
 
-    payload[`${name}-lite-alpha-${x}` as IColorKeys<T>] = `${Coloring.rgba(glighten, x / opacityRatio)}`;
-
-    payload[`${name}-lite-alpha-${x}-lite` as IColorKeys<T>] = `${Coloring.rgba(Coloring.lighten(glighten), x / opacityRatio)}`;
-
-    payload[`${name}-lite-alpha-${x}-heavy` as IColorKeys<T>] = `${Coloring.rgba(Coloring.darken(glighten), x / opacityRatio)}`;
+      const gdarken = Coloring.darken(lighten);
 
 
-    payload[`${name}-heavy-alpha-${x}` as IColorKeys<T>] = `${Coloring.rgba(gdarken, x / opacityRatio)}`;
+      payload[`${name}-lite-alpha-${x}` as IColorKeys<T>] = `${Coloring.rgba(glighten, alpha)}`;
 
-    payload[`${name}-heavy-alpha-${x}-lite` as IColorKeys<T>] = `${Coloring.rgba(Coloring.lighten(gdarken), x / opacityRatio)}`;
+      payload[`${name}-lite-alpha-${x}-lite` as IColorKeys<T>] = `${Coloring.rgba(Coloring.lighten(glighten), alpha)}`;
 
-    payload[`${name}-heavy-alpha-${x}-heavy` as IColorKeys<T>] = `${Coloring.rgba(Coloring.darken(gdarken), x / opacityRatio)}`;
+      payload[`${name}-lite-alpha-${x}-heavy` as IColorKeys<T>] = `${Coloring.rgba(Coloring.darken(glighten), alpha)}`;
+
+
+      payload[`${name}-heavy-alpha-${x}` as IColorKeys<T>] = `${Coloring.rgba(gdarken, alpha)}`;
+
+      payload[`${name}-heavy-alpha-${x}-lite` as IColorKeys<T>] = `${Coloring.rgba(Coloring.lighten(gdarken), alpha)}`;
+
+      payload[`${name}-heavy-alpha-${x}-heavy` as IColorKeys<T>] = `${Coloring.rgba(Coloring.darken(gdarken), alpha)}`;
+
+    }
 
   }
 
@@ -190,19 +199,16 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
 }
 
 
-
-
 export function runtime(config ?: IRuntimeConfig): IThemingRuntime {
 
   config = config || {}
-  
 
-  const palettes = theming({ identifier: config.palette || undefined })
 
-  const tones = theming({ identifier: config.tone || undefined })
+  const palettes = theming({identifier: config.palette || undefined})
 
-  const properties = theming({ identifier: config.category || undefined })
+  const tones = theming({identifier: config.tone || undefined})
 
+  const properties = theming({identifier: config.category || undefined})
 
 
   const slots = Array.from(document.querySelectorAll(MetaConfig.selectorID)).map(meta => {
@@ -218,7 +224,6 @@ export function runtime(config ?: IRuntimeConfig): IThemingRuntime {
     const type = (meta.getAttribute('theme:type') || ThemeTypes.Data) as ThemeTypes;
 
     const series = (meta.getAttribute('theme:series') || ThemeSeries.Property) as ThemeSeries;
-
 
 
     if (name && value) {
@@ -243,14 +248,20 @@ export function runtime(config ?: IRuntimeConfig): IThemingRuntime {
 
         .option('opacityRatio', opacityRatio)
 
-        ;
+      ;
 
 
-      if (series == ThemeSeries.Palette) { (paletteName ? Themings.palette(paletteName) || palettes : palettes).slot(slot) }
+      if (series == ThemeSeries.Palette) {
+        (paletteName ? Themings.palette(paletteName) || palettes : palettes).slot(slot)
+      }
 
-      if (series == ThemeSeries.Tone) { (toneName ? Themings.tone(toneName) || tones : tones).slot(slot) }
+      if (series == ThemeSeries.Tone) {
+        (toneName ? Themings.tone(toneName) || tones : tones).slot(slot)
+      }
 
-      if (series == ThemeSeries.Property) { (categoryName ? Themings.category(categoryName) || properties : properties).slot(slot) }
+      if (series == ThemeSeries.Property) {
+        (categoryName ? Themings.category(categoryName) || properties : properties).slot(slot)
+      }
 
       return slot
 
@@ -268,7 +279,6 @@ export function runtime(config ?: IRuntimeConfig): IThemingRuntime {
   properties.render();
 
 
-
-  return { palettes, tones, properties, slots, }
+  return {palettes, tones, properties, slots,}
 
 }
