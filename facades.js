@@ -59,6 +59,17 @@ export function variant(name, color, intensityRatio, opacityRatio) {
     payload[`${name}-lite`] = `${lighten}`;
     payload[`${name}-heavy`] = `${darken}`;
     /**
+     * Saturations
+     */
+    payload[`${name}-50`] = `${Coloring.darken(color, 10)}`;
+    for (let x = 1; x <= 9; x++) {
+        const num = x * 100;
+        const val = x * 20;
+        if (!isNaN(num)) {
+            payload[`${name}-${num}`] = `${Coloring.darken(color, val)}`;
+        }
+    }
+    /**
      * Opacité classique
      */
     for (let x = 0; x <= 9; x++) {

@@ -143,6 +143,27 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
 
 
   /**
+   * Saturations
+   */
+
+  payload[`${name}-50` as IColorKeys<T>] = `${Coloring.darken(color, 10)}`;
+
+  for (let x = 1; x <= 9; x++) {
+
+    const num = x * 100;
+
+    const val = x * 20;
+
+    if (!isNaN(num)) {
+
+      payload[`${name}-${num}` as IColorKeys<T>] = `${Coloring.darken(color, val)}`;
+
+    }
+
+  }
+
+
+  /**
    * Opacité classique
    */
   for (let x = 0; x <= 9; x++) {
