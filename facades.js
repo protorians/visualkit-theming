@@ -62,26 +62,32 @@ export function variant(name, color, intensityRatio, opacityRatio) {
      * Opacité classique
      */
     for (let x = 0; x <= 9; x++) {
-        payload[`${name}-alpha-${x}`] = `${Coloring.rgba(color, x / opacityRatio)}`;
-        payload[`${name}-alpha-${x}-lite`] = `${Coloring.rgba(lighten, x / opacityRatio)}`;
-        payload[`${name}-alpha-${x}-heavy`] = `${Coloring.rgba(darken, x / opacityRatio)}`;
+        const alpha = x / opacityRatio;
+        if (!isNaN(alpha)) {
+            payload[`${name}-alpha-${x}`] = `${Coloring.rgba(color, alpha)}`;
+            payload[`${name}-alpha-${x}-lite`] = `${Coloring.rgba(lighten, alpha)}`;
+            payload[`${name}-alpha-${x}-heavy`] = `${Coloring.rgba(darken, alpha)}`;
+        }
     }
     /**
      * Opacité des variations
      */
     for (let x = 0; x <= 9; x++) {
-        const glighten = Coloring.lighten(lighten);
-        const gdarken = Coloring.darken(lighten);
-        payload[`${name}-lite-alpha-${x}`] = `${Coloring.rgba(glighten, x / opacityRatio)}`;
-        payload[`${name}-lite-alpha-${x}-lite`] = `${Coloring.rgba(Coloring.lighten(glighten), x / opacityRatio)}`;
-        payload[`${name}-lite-alpha-${x}-heavy`] = `${Coloring.rgba(Coloring.darken(glighten), x / opacityRatio)}`;
-        payload[`${name}-heavy-alpha-${x}`] = `${Coloring.rgba(gdarken, x / opacityRatio)}`;
-        payload[`${name}-heavy-alpha-${x}-lite`] = `${Coloring.rgba(Coloring.lighten(gdarken), x / opacityRatio)}`;
-        payload[`${name}-heavy-alpha-${x}-heavy`] = `${Coloring.rgba(Coloring.darken(gdarken), x / opacityRatio)}`;
+        const alpha = x / opacityRatio;
+        if (!isNaN(alpha)) {
+            const glighten = Coloring.lighten(lighten);
+            const gdarken = Coloring.darken(lighten);
+            payload[`${name}-lite-alpha-${x}`] = `${Coloring.rgba(glighten, alpha)}`;
+            payload[`${name}-lite-alpha-${x}-lite`] = `${Coloring.rgba(Coloring.lighten(glighten), alpha)}`;
+            payload[`${name}-lite-alpha-${x}-heavy`] = `${Coloring.rgba(Coloring.darken(glighten), alpha)}`;
+            payload[`${name}-heavy-alpha-${x}`] = `${Coloring.rgba(gdarken, alpha)}`;
+            payload[`${name}-heavy-alpha-${x}-lite`] = `${Coloring.rgba(Coloring.lighten(gdarken), alpha)}`;
+            payload[`${name}-heavy-alpha-${x}-heavy`] = `${Coloring.rgba(Coloring.darken(gdarken), alpha)}`;
+        }
     }
     return payload;
 }
-export function runtime(config) {
+export function useMetaTheme(config) {
     config = config || {};
     const palettes = theming({ identifier: config.palette || undefined });
     const tones = theming({ identifier: config.tone || undefined });

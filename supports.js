@@ -25,14 +25,23 @@ export class Themings {
 }
 Themings.entries = [];
 export class Coloring {
-    static rgba(hex, alpha = 1) {
-        let h = hex.replace('#', '');
-        if (h.length === 3) {
-            h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    static fixHexColor(hex) {
+        if (hex.length == 3 || hex.length == 4) {
+            return `${hex}${hex.replace('#', '')}`;
         }
-        let r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+        return hex;
+    }
+    static rgba(hex, alpha = 1) {
+        let h = this.fixHexColor(hex).replace('#', '');
+        // if (h.length === 3) {
+        //
+        //   h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+        //
+        // }
+        let r = parseInt(h.substring(0, 2), 16) || 0, g = parseInt(h.substring(2, 4), 16) || 0, b = parseInt(h.substring(4, 6), 16) || 0;
         if (alpha > 1 && alpha <= 100) {
-            alpha = alpha / 100;
+            const fixed = (alpha / 100).toFixed(2);
+            alpha = parseInt(fixed, 2);
         }
         return `rgba(${r},${g},${b},${alpha})`;
     }
@@ -195,7 +204,7 @@ export class Theming {
         return this;
     }
     selector(series) {
-        return `*[${this.kit}\\:${series}${this.options.identifier ? `~="${this.options.identifier}"` : ''}]`;
+        return `*[${this.kit}\\:${series}${this.options.identifier ? `~="${this.options.identifier}"` : ''}], *[${this.kit}\\:name${this.options.identifier ? `~="${this.options.identifier}"` : ''}]`;
     }
     removeSlot(sheet) {
         __classPrivateFieldSet(this, _Theming_slots, __classPrivateFieldGet(this, _Theming_slots, "f").filter(entry => entry.options.name != sheet.options.name), "f");
