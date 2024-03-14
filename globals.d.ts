@@ -9,7 +9,7 @@ declare module '@visualkit/theming/facades' {
   export function makeTheming<Schema extends IThemingBlueprintRaw>(properties: Partial<Schema>, options?: IThemingOptions): Theming;
   export function assign<I>(instance: I, associate: any): I;
   export function variant<T extends string>(name: T, color: string, intensityRatio?: number, opacityRatio?: number): IColors<T>;
-  export function runtime(config?: IRuntimeConfig): IThemingRuntime;
+  export function useMetaTheme(config?: IRuntimeConfig): IThemingRuntime;
 
 }
 declare module '@visualkit/theming/index' {
@@ -32,6 +32,7 @@ declare module '@visualkit/theming/supports' {
       static category(name: string): ITheming;
   }
   export class Coloring {
+      static fixHexColor(hex: string): string;
       static rgba(hex: string, alpha?: number): string;
       static hex({ red, green, blue }: IColorRGB): string;
       static rgb(hex: string): number[];
