@@ -181,19 +181,19 @@ On utilise donc les variable CSS avec le préfixe  `--theme-` et nom de la propr
 ### Utilisation
 En javascript appelez la fonction `runtine()` configurer le thème en fonction des balises métas
     
-    import { runtime } from "@visualkit/theming";
+    import { useMetaTheme } from "@visualkit/theming";
     
     // Rendre la propriété des balise metas disponible partout
-    runtime(); 
+    useMetaTheme(); 
     
     // Donner le nom `default` à toutes les variables de palettes
-    runtime({ palette: "default" }); 
+    useMetaTheme({ palette: "default" }); 
     
     // Donner le nom `default` à toutes les variables de tons
-    runtime({ tone: "default" }); 
+    useMetaTheme({ tone: "default" }); 
     
     // Donner le nom `default` à toutes les variables des autres propriétés
-    runtime({ category: "default" }); 
+    useMetaTheme({ category: "default" }); 
 
 ---
 # ;)

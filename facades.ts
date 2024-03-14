@@ -199,7 +199,7 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
 }
 
 
-export function runtime(config ?: IRuntimeConfig): IThemingRuntime {
+export function useMetaTheme(config ?: IRuntimeConfig): IThemingRuntime {
 
   config = config || {}
 
