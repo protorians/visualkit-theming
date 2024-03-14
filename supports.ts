@@ -429,7 +429,7 @@ export class Theming implements ITheming {
 
   selector(series: IThemingSeries) {
 
-    return `*[${this.kit}\\:${series}${this.options.identifier ? `~="${this.options.identifier}"` : ''}]`
+    return `*[${this.kit}\\:${series}${this.options.identifier ? `~="${this.options.identifier}"` : ''}], *[${this.kit}\\:name${this.options.identifier ? `~="${this.options.identifier}"` : ''}]`
 
   }
 
