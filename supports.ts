@@ -1,3 +1,4 @@
+import chroma from "chroma-js";
 import { assign, variant } from "./facades";
 import {
   ThemeTypes,
@@ -167,19 +168,21 @@ export class Coloring {
 
 
 
-  static lighten(hex: string, ratio: number = 7, hastag: boolean = true) {
+  static lighten(hex: string, ratio: number = 2) {
 
-    return this.intensity(hex, ratio < 0 ? 0 : ratio, hastag)
-
-  }
-
-  static darken(hex: string, ratio: number = 7, hastag: boolean = true) {
-
-    return this.intensity(hex, -1 * (ratio > 0 ? ratio : 0), hastag)
+    return chroma(this.fixHexColor(hex)).brighten(ratio).hex()
+    // return this.intensity(hex, ratio < 0 ? 0 : ratio, hashtag)
 
   }
 
-  static intensity(hex: string, ratio: number, hastag: boolean = true) {
+  static darken(hex: string, ratio: number = 2) {
+
+    return chroma(this.fixHexColor(hex)).darken(ratio).hex()
+    // return this.intensity(hex, -1 * (ratio > 0 ? ratio : 0), hashtag)
+
+  }
+
+  static intensity(hex: string, ratio: number, hashtag: boolean = true) {
 
     hex = hex.replace(`#`, ``);
 
@@ -189,23 +192,23 @@ export class Coloring {
 
       let r = (decimalColor >> 16) + ratio;
 
-      r > 255 && (r = 255);
+        r > 255 && (r = 255);
 
-      r < 0 && (r = 0);
+        r < 0 && (r = 0);
 
       let g = (decimalColor & 0x0000ff) + ratio;
 
-      g > 255 && (g = 255);
+        g > 255 && (g = 255);
 
-      g < 0 && (g = 0);
+        g < 0 && (g = 0);
 
       let b = ((decimalColor >> 8) & 0x00ff) + ratio;
 
-      b > 255 && (b = 255);
+        b > 255 && (b = 255);
 
-      b < 0 && (b = 0);
+        b < 0 && (b = 0);
 
-      return `${hastag ? '#' : ''}${(g | (b << 8) | (r << 16)).toString(16)}`;
+      return `${hashtag ? '#' : ''}${( g | (b << 8) | (r << 16) ).toString(16)}`;
 
     } else {
 

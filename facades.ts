@@ -130,9 +130,9 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
 
   const payload: IColors<T> = {} as IColors<T>;
 
-  const lighten = Coloring.lighten(color, intensityRatio)
+  const lighten = Coloring.lighten(color, intensityRatio/10)
 
-  const darken = Coloring.darken(color, intensityRatio)
+  const darken = Coloring.darken(color, intensityRatio/10)
 
 
   payload[name as IColorKeys<T>] = `${(color)}`;
@@ -146,17 +146,20 @@ export function variant<T extends string>(name: T, color: string, intensityRatio
    * Saturations
    */
 
-  payload[`${name}-50` as IColorKeys<T>] = `${Coloring.darken(color, 10)}`;
+  payload[`${name}-50` as IColorKeys<T>] = `${Coloring.lighten(color, 0.5)}`;
+
+  payload[`${name}--50` as IColorKeys<T>] = `${Coloring.darken(color, 0.5)}`;
 
   for (let x = 1; x <= 9; x++) {
 
     const num = x * 100;
 
-    const val = x * 20;
 
     if (!isNaN(num)) {
 
-      payload[`${name}-${num}` as IColorKeys<T>] = `${Coloring.darken(color, val)}`;
+      payload[`${name}-${num}` as IColorKeys<T>] = `${Coloring.lighten(color, (10 - x) * .21)}`;
+
+      payload[`${name}--${num}` as IColorKeys<T>] = `${Coloring.darken(color, x * .21)}`;
 
     }
 

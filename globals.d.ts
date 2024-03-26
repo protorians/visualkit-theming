@@ -37,9 +37,9 @@ declare module '@visualkit/theming/supports' {
       static hex({ red, green, blue }: IColorRGB): string;
       static rgb(hex: string): number[];
       static cmyk(hex: string): number[] | undefined;
-      static lighten(hex: string, ratio?: number, hastag?: boolean): string;
-      static darken(hex: string, ratio?: number, hastag?: boolean): string;
-      static intensity(hex: string, ratio: number, hastag?: boolean): string;
+      static lighten(hex: string, ratio?: number): string;
+      static darken(hex: string, ratio?: number): string;
+      static intensity(hex: string, ratio: number, hashtag?: boolean): string;
   }
   export class MetaElement {
       static elements(property: string): Element[];

@@ -53,20 +53,21 @@ export function variant(name, color, intensityRatio, opacityRatio) {
     intensityRatio = intensityRatio || 10;
     opacityRatio = opacityRatio || 10;
     const payload = {};
-    const lighten = Coloring.lighten(color, intensityRatio);
-    const darken = Coloring.darken(color, intensityRatio);
+    const lighten = Coloring.lighten(color, intensityRatio / 10);
+    const darken = Coloring.darken(color, intensityRatio / 10);
     payload[name] = `${(color)}`;
     payload[`${name}-lite`] = `${lighten}`;
     payload[`${name}-heavy`] = `${darken}`;
     /**
      * Saturations
      */
-    payload[`${name}-50`] = `${Coloring.darken(color, 10)}`;
+    payload[`${name}-50`] = `${Coloring.lighten(color, 0.5)}`;
+    payload[`${name}--50`] = `${Coloring.darken(color, 0.5)}`;
     for (let x = 1; x <= 9; x++) {
         const num = x * 100;
-        const val = x * 20;
         if (!isNaN(num)) {
-            payload[`${name}-${num}`] = `${Coloring.darken(color, val)}`;
+            payload[`${name}-${num}`] = `${Coloring.lighten(color, (10 - x) * .21)}`;
+            payload[`${name}--${num}`] = `${Coloring.darken(color, x * .21)}`;
         }
     }
     /**

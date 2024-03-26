@@ -10,6 +10,7 @@ var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (
     return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 };
 var _ThemingSlot_options, _ThemingSlot_payload, _Theming_slots;
+import chroma from "chroma-js";
 import { assign, variant } from "./facades";
 import { ThemeTypes, ThemeSeries } from "./types";
 export class Themings {
@@ -88,13 +89,15 @@ export class Coloring {
         K = minCMY;
         return [C, M, Y, K];
     }
-    static lighten(hex, ratio = 7, hastag = true) {
-        return this.intensity(hex, ratio < 0 ? 0 : ratio, hastag);
+    static lighten(hex, ratio = 2) {
+        return chroma(this.fixHexColor(hex)).brighten(ratio).hex();
+        // return this.intensity(hex, ratio < 0 ? 0 : ratio, hashtag)
     }
-    static darken(hex, ratio = 7, hastag = true) {
-        return this.intensity(hex, -1 * (ratio > 0 ? ratio : 0), hastag);
+    static darken(hex, ratio = 2) {
+        return chroma(this.fixHexColor(hex)).darken(ratio).hex();
+        // return this.intensity(hex, -1 * (ratio > 0 ? ratio : 0), hashtag)
     }
-    static intensity(hex, ratio, hastag = true) {
+    static intensity(hex, ratio, hashtag = true) {
         hex = hex.replace(`#`, ``);
         if (hex.length === 6) {
             const decimalColor = parseInt(hex, 16);
@@ -107,7 +110,7 @@ export class Coloring {
             let b = ((decimalColor >> 8) & 0x00ff) + ratio;
             b > 255 && (b = 255);
             b < 0 && (b = 0);
-            return `${hastag ? '#' : ''}${(g | (b << 8) | (r << 16)).toString(16)}`;
+            return `${hashtag ? '#' : ''}${(g | (b << 8) | (r << 16)).toString(16)}`;
         }
         else {
             return hex;
